@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA FITNESS CLUB | 30일 만에 옷핏이 바뀌는 1:1 밀착 트레이닝</title>
+  
+  <!-- Pretendard Font CDN -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              lime: '#a3e635',     // 네온 라임 기본
+              limeHover: '#84cc16',// 짙은 라임
+              limeGlow: '#bef264',
+              cyan: '#06b6d4',     // 일렉트릭 블루/시안 서브포인트
+              gold: '#fbbf24',     // 혜택 강조 골드
+              dark: '#070a13',     // 극암 배경
+              card: '#0f172a',     // 카드 배경
+              border: 'rgba(255, 255, 255, 0.08)',
+            }
+          },
+          boxShadow: {
+            'glow-lime': '0 0 28px -2px rgba(163, 230, 53, 0.5)',
+            'glow-lime-sm': '0 0 16px -2px rgba(163, 230, 53, 0.35)',
+            'glow-cyan': '0 0 25px -3px rgba(6, 182, 212, 0.35)',
+            'glow-gold': '0 0 25px -3px rgba(251, 191, 36, 0.4)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* 커스텀 유틸리티 */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-panel-hover:hover {
+      border-color: rgba(163, 230, 53, 0.45);
+      transform: translateY(-4px);
+    }
+    .neon-text-gradient {
+      background: linear-gradient(135deg, #ffffff 30%, #a3e635 85%, #bef264 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .neon-badge {
+      background: rgba(163, 230, 53, 0.12);
+      border: 1px solid rgba(163, 230, 53, 0.35);
+      color: #bef264;
+    }
+    .urgency-badge {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+    .benefit-banner {
+      background: linear-gradient(135deg, rgba(163, 230, 53, 0.15) 0%, rgba(6, 182, 212, 0.12) 100%);
+      border: 2px solid rgba(163, 230, 53, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-[#070a13] text-slate-100 font-sans antialiased selection:bg-brand-lime selection:text-black min-h-screen overflow-x-hidden">
+
+  <!-- ==================== 네비게이션 헤더 ==================== -->
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glass-panel border-b border-white/5 py-3.5 px-6 md:px-12">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <!-- 로고 -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-lime to-brand-cyan flex items-center justify-center font-black text-black text-xl shadow-glow-lime-sm transition-transform group-hover:scale-105">
+          A
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-wider text-white">AURA</span>
+          <span class="text-[10px] font-bold text-brand-lime tracking-widest block -mt-1 uppercase">VIP Fitness Club</span>
+        </div>
+      </a>
+
+      <!-- 데스크톱 메뉴 링크 -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#features" class="hover:text-brand-lime transition-colors">왜 아우라인가?</a>
+        <a href="#trainers" class="hover:text-brand-lime transition-colors">10년 경력 마스터 코치</a>
+        <a href="#stats" class="hover:text-brand-lime transition-colors">실제 변화 데이터</a>
+        <a href="#consultation" class="hover:text-brand-lime transition-colors">100% 무료 체험 신청</a>
+      </nav>
+
+      <!-- 상단 CTA 버튼 (행동 유도 & 선착순 한정) -->
+      <div class="flex items-center gap-3">
+        <a href="#consultation" class="relative group inline-flex items-center gap-2 px-4 py-2.5 md:px-5 md:py-2.5 rounded-full text-xs md:text-sm font-black bg-brand-lime text-black hover:bg-brand-limeGlow transition-all duration-200 shadow-glow-lime-sm hover:scale-105">
+          <i data-lucide="flame" class="w-4 h-4 text-black"></i>
+          <span>지금 1회 무료 체험 (선착순 10명)</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 1. 메인 히어로 섹션 (강력한 후킹 & 결핍 자극) ==================== -->
+  <section class="relative min-h-screen flex items-center justify-center pt-28 pb-16 px-6 overflow-hidden">
+    <!-- 배경 오버레이 & 조명 효과 -->
+    <div class="absolute inset-0 z-0">
+      <img 
+        src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop" 
+        alt="AURA Fitness Club Interior" 
+        class="w-full h-full object-cover object-center opacity-25 filter brightness-75 scale-105"
+      />
+      <!-- 다크 그라디언트 레이어 -->
+      <div class="absolute inset-0 bg-gradient-to-t from-[#070a13] via-[#070a13]/85 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-[#070a13] via-transparent to-[#070a13]"></div>
+      
+      <!-- 네온 앰비언트 글로우 오브젝트 -->
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[360px] bg-brand-lime/10 blur-[150px] pointer-events-none rounded-full"></div>
+      <div class="absolute bottom-1/4 right-10 w-[350px] h-[350px] bg-brand-cyan/15 blur-[130px] pointer-events-none rounded-full"></div>
+    </div>
+
+    <div class="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center mt-4">
+      <!-- 긴급성 & 희소성 상단 뱃지 -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full urgency-badge text-xs md:text-sm font-bold tracking-wide mb-6 animate-pulse">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+        <span>🚨 이번 달 신규 등록 마감 임박 | 1:1 전담 슬롯 선착순 잔여 3자리</span>
+      </div>
+
+      <!-- 메인 헤드라인: 고객의 결핍과 목표를 직접 건드리는 강력한 후킹 -->
+      <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.2] mb-6">
+        혼자 하는 막막한 운동은 이제 그만!<br />
+        <span class="neon-text-gradient">30일 만에 옷핏이 바뀌는</span> 1:1 밀착 트레이닝
+      </h1>
+
+      <!-- 서브 헤드라인: 구체적인 숫자로 입증하는 압도적 신뢰도 -->
+      <p class="max-w-3xl text-slate-200 text-base md:text-xl font-normal leading-relaxed mb-10 text-balance">
+        헬스장 3개월 끊고 일주일 만에 포기하셨나요? <strong class="text-brand-lime font-bold">10년 경력의 국가대표·IFBB 프로 마스터 코치</strong>가 체형 불균형 분석부터 식단까지 1:1로 밀착 관리합니다. <strong class="text-white font-bold">회원 만족도 98%</strong>가 증명하는 <strong class="text-brand-lime font-bold">30일 바디 체인지</strong>, 이제 당신 차례입니다.
+      </p>
+
+      <!-- CTA 버튼 그룹 (즉각적인 행동 유발) -->
+      <div class="flex flex-col items-center gap-3 w-full sm:w-auto">
+        <a href="#consultation" class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 md:py-5 rounded-2xl font-black text-base md:text-xl bg-brand-lime text-black hover:bg-brand-limeGlow shadow-glow-lime transition-all duration-300 hover:-translate-y-1 active:translate-y-0 group">
+          <i data-lucide="zap" class="w-6 h-6 fill-black"></i>
+          <span>지금 1회 무료 체험 신청하기 (선착순 10명)</span>
+          <i data-lucide="arrow-right" class="w-6 h-6 stroke-[3] group-hover:translate-x-1 transition-transform"></i>
+        </a>
+        <p class="text-xs text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-brand-lime"></i>
+          <span>상담 신청 시 부담스러운 회원권 강요는 절대 하지 않습니다.</span>
+        </p>
+      </div>
+
+      <!-- 하단 신뢰 지표 (Social Proof with Concrete Numbers) -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 mt-16 pt-10 border-t border-white/10 w-full text-center">
+        <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+          <div class="text-3xl md:text-4xl font-black text-brand-lime">98.4%</div>
+          <div class="text-xs md:text-sm font-semibold text-slate-300 mt-1">회원 목표 달성 만족도</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">실제 수강생 후기 검증</div>
+        </div>
+        <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+          <div class="text-3xl md:text-4xl font-black text-white">30일</div>
+          <div class="text-xs md:text-sm font-semibold text-slate-300 mt-1">평균 옷핏 & 체지방 변화 주기</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">단기 집중 맞춤 솔루션</div>
+        </div>
+        <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+          <div class="text-3xl md:text-4xl font-black text-brand-cyan">10년+</div>
+          <div class="text-xs md:text-sm font-semibold text-slate-300 mt-1">마스터 코치 평균 지도 경력</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">국제 공인 자격 & 챔피언</div>
+        </div>
+        <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+          <div class="text-3xl md:text-4xl font-black text-white">15,000+</div>
+          <div class="text-xs md:text-sm font-semibold text-slate-300 mt-1">누적 체형 개선 성공 데이터</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">메디컬 기반 정밀 분석</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== 2. 특장점 3종 카드 섹션 (고객의 실제 Benefit 중심) ==================== -->
+  <section id="features" class="py-24 px-6 md:px-12 relative bg-[#090e1b]">
+    <!-- 배경 라인 & 조명 -->
+    <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] opacity-20 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+      <!-- 섹션 헤더 -->
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="inline-block text-brand-lime text-xs md:text-sm font-bold tracking-widest uppercase mb-3">
+          WHY CHOOSE AURA FITNESS
+        </span>
+        <h2 class="text-3xl md:text-5xl font-black text-white tracking-tight mb-4">
+          당신이 다른 곳에서 실패했던 이유,<br />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-lime to-brand-cyan">아우라에서는 이렇게 해결됩니다</span>
+        </h2>
+        <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+          단순한 기구 나열이 아닙니다. 매 순간 부상 없이 가장 빠르고 쾌적하게 몸이 바뀌는 압도적 혜택을 설계했습니다.
+        </p>
+      </div>
+
+      <!-- 특장점 3종 카드 그리드 (고객 Benefit 중심 카피라이팅) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- 특장점 1: 최고급 명품 머신 -> [내 몸에 딱 감기는 궤적, 관절 통증 없이 타오르는 자극] -->
+        <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 glass-panel-hover group relative overflow-hidden">
+          <div class="absolute -right-12 -top-12 w-36 h-36 bg-brand-lime/10 rounded-full blur-2xl group-hover:bg-brand-lime/20 transition-colors"></div>
+          <div>
+            <!-- 상단 넘버링 & 아이콘 -->
+            <div class="flex items-center justify-between mb-8">
+              <span class="text-3xl font-black text-white/20 group-hover:text-brand-lime transition-colors">BENEFIT 01</span>
+              <div class="w-14 h-14 rounded-2xl bg-brand-lime/10 border border-brand-lime/30 flex items-center justify-center text-brand-lime group-hover:bg-brand-lime group-hover:text-black transition-all duration-300">
+                <i data-lucide="dumbbell" class="w-7 h-7"></i>
+              </div>
+            </div>
+
+            <!-- 카드 썸네일 이미지 -->
+            <div class="rounded-2xl overflow-hidden mb-6 aspect-video relative border border-white/10">
+              <img 
+                src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=1000&auto=format&fit=crop" 
+                alt="해외 명품 머신 구비" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+              <span class="absolute bottom-3 left-3 text-xs font-bold px-2.5 py-1 rounded bg-black/70 backdrop-blur-md text-brand-lime border border-brand-lime/30">
+                무릎·허리 부담 0% 안심 궤적
+              </span>
+            </div>
+
+            <p class="text-xs font-bold uppercase tracking-wider text-brand-lime mb-2">최고급 해외 명품 머신 풀 라인업</p>
+            <h3 class="text-xl md:text-2xl font-black text-white mb-3 group-hover:text-brand-lime transition-colors leading-snug">
+              내 몸에 딱 감기는 궤적,<br />
+              관절 통증 없이 타오르는 자극
+            </h3>
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+              "무거운 쇳덩이를 들다 허리나 무릎을 다칠까 봐 두려우셨나요?" 전 세계 5성급 호텔에만 들어가는 <strong class="text-white">테크노짐 & 해머스트렝스</strong> 머신은 인체 관절 각도에 맞춰 부드럽게 작동합니다. <span class="text-brand-lime font-semibold">초보자도 부상 걱정 없이 첫날부터 타깃 부위에 100% 자극</span>을 정확히 꽂아 넣을 수 있습니다.
+            </p>
+          </div>
+
+          <ul class="space-y-2.5 text-xs text-slate-300 pt-4 border-t border-white/10">
+            <li class="flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-lime shrink-0"></i>
+              <span>생체역학 특허 궤적으로 <strong>운동 초보자도 관절 통증 제로</strong></span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-lime shrink-0"></i>
+              <span><strong>짧은 30분 운동</strong>으로도 2배 이상의 폭발적 근육 자극 유도</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 특장점 2: 정밀 체형 분석 -> [무작정 굶고 뛰지 마세요. 내 몸의 틀어짐부터 잡는 진짜 변화] -->
+        <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 glass-panel-hover group relative overflow-hidden border-brand-lime/30 shadow-glow-lime-sm md:-translate-y-2">
+          <div class="absolute top-0 right-0 bg-brand-lime text-black font-black text-[10px] tracking-wider uppercase px-4 py-1.5 rounded-bl-xl shadow">
+            MOST POPULAR
+          </div>
+          <div class="absolute -right-12 -top-12 w-36 h-36 bg-brand-cyan/15 rounded-full blur-2xl group-hover:bg-brand-cyan/25 transition-colors"></div>
+          <div>
+            <!-- 상단 넘버링 & 아이콘 -->
+            <div class="flex items-center justify-between mb-8">
+              <span class="text-3xl font-black text-brand-lime">BENEFIT 02</span>
+              <div class="w-14 h-14 rounded-2xl bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan group-hover:bg-brand-cyan group-hover:text-black transition-all duration-300">
+                <i data-lucide="scan" class="w-7 h-7"></i>
+              </div>
+            </div>
+
+            <!-- 카드 썸네일 이미지 -->
+            <div class="rounded-2xl overflow-hidden mb-6 aspect-video relative border border-white/10">
+              <img 
+                src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1000&auto=format&fit=crop" 
+                alt="1:1 맞춤 정밀 체형분석" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+              <span class="absolute bottom-3 left-3 text-xs font-bold px-2.5 py-1 rounded bg-black/70 backdrop-blur-md text-brand-cyan border border-brand-cyan/30">
+                3D 스캔 &bull; FMS 기능 검사
+              </span>
+            </div>
+
+            <p class="text-xs font-bold uppercase tracking-wider text-brand-cyan mb-2">1:1 맞춤 정밀 체형 분석 & FMS 검사</p>
+            <h3 class="text-xl md:text-2xl font-black text-white mb-3 group-hover:text-brand-cyan transition-colors leading-snug">
+              무작정 굶고 뛰지 마세요,<br />
+              틀어짐부터 잡아야 옷핏이 살아납니다
+            </h3>
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+              "살을 빼도 뱃살과 승모근만 도드라져 보였나요?" 진짜 원인은 틀어진 골반과 굽은 등 때문입니다. <strong class="text-white">3D 전신 체형 스캐너</strong>로 1mm의 미세 불균형까지 정밀 진단하여, 체형 교정과 체지방 감량을 동시에 잡는 <span class="text-brand-cyan font-semibold">오직 한 사람만을 위한 맞춤 처방</span>을 제공합니다.
+            </p>
+          </div>
+
+          <ul class="space-y-2.5 text-xs text-slate-300 pt-4 border-t border-white/10">
+            <li class="flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-cyan shrink-0"></i>
+              <span>굽은 어깨·거북목 개선으로 <strong>숨어있던 키와 바른 목선 회복</strong></span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-cyan shrink-0"></i>
+              <span>남들의 운동법이 아닌 <strong>내 체형에 꼭 맞춘 주차별 성공 루틴</strong></span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 특장점 3: 프라이빗 샤워룸 -> [남들 시선 없는 완전한 자유, 나만을 위한 온전한 힐링] -->
+        <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 glass-panel-hover group relative overflow-hidden">
+          <div class="absolute -right-12 -top-12 w-36 h-36 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-colors"></div>
+          <div>
+            <!-- 상단 넘버링 & 아이콘 -->
+            <div class="flex items-center justify-between mb-8">
+              <span class="text-3xl font-black text-white/20 group-hover:text-brand-lime transition-colors">BENEFIT 03</span>
+              <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/15 flex items-center justify-center text-slate-200 group-hover:bg-white group-hover:text-black transition-all duration-300">
+                <i data-lucide="bath" class="w-7 h-7"></i>
+              </div>
+            </div>
+
+            <!-- 카드 썸네일 이미지 -->
+            <div class="rounded-2xl overflow-hidden mb-6 aspect-video relative border border-white/10">
+              <img 
+                src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1000&auto=format&fit=crop" 
+                alt="프라이빗 1인 샤워룸" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+              <span class="absolute bottom-3 left-3 text-xs font-bold px-2.5 py-1 rounded bg-black/70 backdrop-blur-md text-slate-200 border border-white/20">
+                100% 프라이빗 &bull; 다이슨 에어랩
+              </span>
+            </div>
+
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">호텔식 1인 프라이빗 샤워 & 파우더룸</p>
+            <h3 class="text-xl md:text-2xl font-black text-white mb-3 group-hover:text-brand-lime transition-colors leading-snug">
+              남들 시선 없는 완전한 자유,<br />
+              운동 후 나만을 위한 럭셔리 힐링
+            </h3>
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+              "땀 흘린 후 붐비는 공용 탈의실에서 눈치 보며 씻는 게 불편하셨나요?" 아우라에서는 단 한 명만을 위한 <strong class="text-white">호텔 스위트룸급 개별 샤워 부스</strong>가 제공됩니다. <span class="text-white font-semibold">다이슨(Dyson) 에어랩&슈퍼소닉</span>과 프리미엄 스킨케어로 운동 후 바로 다음 미팅이나 약속에 완벽하게 참석하세요.
+            </p>
+          </div>
+
+          <ul class="space-y-2.5 text-xs text-slate-300 pt-4 border-t border-white/10">
+            <li class="flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-lime shrink-0"></i>
+              <span>타인의 시선과 마주침을 차단한 <strong>100% 독립된 개별 파우더룸</strong></span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-lime shrink-0"></i>
+              <span><strong>무거운 짐 없이 가볍게 방문</strong> 가능한 최고급 어메니티 무상 지원</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== 3. 마스터 트레이너 프로필 섹션 ==================== -->
+  <section id="trainers" class="py-24 px-6 md:px-12 relative bg-[#070a13]">
+    <div class="max-w-7xl mx-auto">
+      <!-- 섹션 헤더 -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div>
+          <span class="inline-block text-brand-lime text-xs md:text-sm font-bold tracking-widest uppercase mb-3">
+            VERIFIED EXPERT COACHING
+          </span>
+          <h2 class="text-3xl md:text-5xl font-black text-white tracking-tight">
+            당신의 포기를 모르는 멘토,<br />
+            <span class="neon-text-gradient">10년 경력의 마스터 코치진</span>
+          </h2>
+        </div>
+        <p class="text-slate-300 text-sm md:text-base max-w-md">
+          말로만 가르치는 트레이너는 없습니다. 수천 명의 회원을 직접 변화시킨 검증된 노하우로 당신의 30일을 성공으로 이끕니다.
+        </p>
+      </div>
+
+      <!-- 트레이너 2인 프로필 카드 그리드 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <!-- 트레이너 1: 제임스 강 (헤드 코치) -->
+        <div class="glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-brand-lime/40 transition-all duration-300 flex flex-col md:flex-row group">
+          <!-- 사진 영역 -->
+          <div class="md:w-5/12 relative min-h-[340px] md:min-h-full overflow-hidden">
+            <img 
+              src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?q=80&w=987&auto=format&fit=crop" 
+              alt="제임스 강 마스터 트레이너" 
+              class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/80 via-transparent to-transparent"></div>
+            <div class="absolute top-4 left-4">
+              <span class="px-3 py-1 rounded-full text-[11px] font-black bg-brand-lime text-black uppercase tracking-wider">
+                12년 경력 &bull; Head Master
+              </span>
+            </div>
+          </div>
+
+          <!-- 소개 및 경력 영역 -->
+          <div class="p-8 md:w-7/12 flex flex-col justify-between">
+            <div>
+              <div class="flex items-baseline justify-between mb-2">
+                <div>
+                  <h3 class="text-2xl font-black text-white">제임스 강 (James Kang)</h3>
+                  <p class="text-xs text-brand-lime font-bold uppercase tracking-wider mt-0.5">30일 바디체인지 & 근력강화 총괄 헤드</p>
+                </div>
+              </div>
+              <p class="text-slate-200 text-xs md:text-sm mt-3 leading-relaxed font-medium bg-white/5 p-3.5 rounded-xl border border-white/5">
+                "운동은 힘들고 지치는 것이 아닙니다. 내 몸이 달라지는 쾌감을 알게 되는 순간, 운동은 평생의 가장 즐거운 습관이 됩니다."
+              </p>
+
+              <!-- 주요 자격 & 경력 리스트 -->
+              <div class="mt-6 space-y-3">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                  <i data-lucide="award" class="w-4 h-4 text-brand-lime"></i>
+                  <span>검증된 경력 및 공식 타이틀</span>
+                </h4>
+                <div class="space-y-2 text-xs text-slate-300">
+                  <div class="flex items-start gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-lime mt-1.5 shrink-0"></span>
+                    <span><strong>IFBB PRO 피지크</strong> 챔피언십 1위 그랑프리 (2022)</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-lime mt-1.5 shrink-0"></span>
+                    <span>미국체력관리학회 <strong>NSCA-CSCS</strong> 공인 수석 체력관리사</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-lime mt-1.5 shrink-0"></span>
+                    <span>前 국가대표 보디빌딩 상비군 전담 피지컬 총괄 코치</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-lime mt-1.5 shrink-0"></span>
+                    <span><strong>누적 VIP 회원 30일 목표 달성률 98.4%</strong> 달성</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
+              <span class="text-xs text-slate-400">전문분야: 30일 옷핏 변화 &bull; 근비대 &bull; 식단 코칭</span>
+              <a href="#consultation" class="text-xs font-bold text-brand-lime hover:underline flex items-center gap-1">
+                제임스 코치 무료상담 지명하기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 트레이너 2: 클로이 정 (시니어 재활 & 필라테스) -->
+        <div class="glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-brand-cyan/40 transition-all duration-300 flex flex-col md:flex-row group">
+          <!-- 사진 영역 -->
+          <div class="md:w-5/12 relative min-h-[340px] md:min-h-full overflow-hidden">
+            <img 
+              src="https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1000&auto=format&fit=crop" 
+              alt="클로이 정 마스터 트레이너" 
+              class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/80 via-transparent to-transparent"></div>
+            <div class="absolute top-4 left-4">
+              <span class="px-3 py-1 rounded-full text-[11px] font-black bg-brand-cyan text-black uppercase tracking-wider">
+                10년 경력 &bull; Senior Specialist
+              </span>
+            </div>
+          </div>
+
+          <!-- 소개 및 경력 영역 -->
+          <div class="p-8 md:w-7/12 flex flex-col justify-between">
+            <div>
+              <div class="flex items-baseline justify-between mb-2">
+                <div>
+                  <h3 class="text-2xl font-black text-white">클로이 정 (Chloe Jung)</h3>
+                  <p class="text-xs text-brand-cyan font-bold uppercase tracking-wider mt-0.5">체형교정 & 메디컬 재활 수석 디렉터</p>
+                </div>
+              </div>
+              <p class="text-slate-200 text-xs md:text-sm mt-3 leading-relaxed font-medium bg-white/5 p-3.5 rounded-xl border border-white/5">
+                "굽은 등과 어깨의 통증을 없애는 순간, 숨겨져 있던 허리선과 목선이 마법처럼 살아납니다. 바른 몸이 가장 아름답습니다."
+              </p>
+
+              <!-- 주요 자격 & 경력 리스트 -->
+              <div class="mt-6 space-y-3">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                  <i data-lucide="award" class="w-4 h-4 text-brand-cyan"></i>
+                  <span>검증된 경력 및 공식 타이틀</span>
+                </h4>
+                <div class="space-y-2 text-xs text-slate-300">
+                  <div class="flex items-start gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan mt-1.5 shrink-0"></span>
+                    <span>미국 스포츠의학회 <strong>NASM-CES</strong> 공인 체형교정전문가</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan mt-1.5 shrink-0"></span>
+                    <span>국제 FMS(Functional Movement Screen) 레벨 2 마스터</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan mt-1.5 shrink-0"></span>
+                    <span>WFF Universe 스포츠모델 프로 1위 챔피언 (2021)</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan mt-1.5 shrink-0"></span>
+                    <span><strong>만성 목·허리 통증 완화 및 체형교정 케이스 2,500+건</strong> 돌파</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
+              <span class="text-xs text-slate-400">전문분야: 거북목·골반 교정 &bull; 슬림 탄력 라인 &bull; 통증 케어</span>
+              <a href="#consultation" class="text-xs font-bold text-brand-cyan hover:underline flex items-center gap-1">
+                클로이 코치 무료상담 지명하기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== 4. 상담 신청 폼 섹션 (파격 혜택 강조 & 마감 임박) ==================== -->
+  <section id="consultation" class="py-24 px-6 md:px-12 relative bg-gradient-to-b from-[#090e1b] to-[#070a13]">
+    <!-- 조명 장식 -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-brand-lime/10 blur-[160px] pointer-events-none rounded-full"></div>
+
+    <div class="max-w-4xl mx-auto relative z-10">
+      
+      <!-- ★ [3. 상담 폼 상단 파격 혜택 배너: 요구사항 3번 완벽 반영] ★ -->
+      <div class="benefit-banner rounded-3xl p-6 md:p-8 mb-10 text-center shadow-glow-lime-sm relative overflow-hidden">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-brand-lime/20 rounded-full blur-xl"></div>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-lime text-black font-black text-xs uppercase tracking-wider mb-3 shadow">
+          <i data-lucide="gift" class="w-4 h-4 fill-black"></i>
+          <span>선착순 10명 한정 &bull; 특별 감사 이벤트</span>
+        </div>
+        
+        <!-- 굵고 선명한 파격 혜택 문구 -->
+        <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight leading-snug">
+          "지금 예약 시 <span class="text-brand-lime underline decoration-brand-lime decoration-4 underline-offset-4">5만 원 상당의 인바디 & 체형분석 3D 리포트</span>를 100% 무료로 제공해 드립니다"
+        </h3>
+        
+        <p class="text-slate-200 text-xs md:text-sm mt-3 font-medium">
+          내 몸의 골격 불균형, 숨은 체지방, 맞춤형 식단 가이드북까지 담긴 10페이지 분량의 정밀 분석 리포트를 방문 시 즉시 무상 증정합니다.
+        </p>
+
+        <!-- 잔여 슬롯 카운트다운 뱃지 -->
+        <div class="inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-xl bg-black/60 border border-brand-lime/40 text-xs font-bold text-brand-lime">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+          <span>오늘 잔여 무료 리포트 혜택: <strong>딱 2자리</strong> 남음</span>
+        </div>
+      </div>
+
+      <!-- 폼 상단 헤더 -->
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-4xl font-black text-white tracking-tight mb-3">
+          망설이는 하루가 지나면, 또 3개월을 후회합니다
+        </h2>
+        <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+          간단한 정보만 남겨주세요. 24시간 이내에 전담 매니저가 연락드려 원하시는 시간에 맞춰 1:1 맞춤 무료 체험 일정을 확정해 드립니다.
+        </p>
+      </div>
+
+      <!-- 상담 신청 폼 카드 -->
+      <div class="glass-panel rounded-3xl p-8 md:p-12 border border-white/10 shadow-2xl relative">
+        <form id="consultationForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 성함 입력란 -->
+            <div>
+              <label for="userName" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                성함 <span class="text-brand-lime">*</span>
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                  <i data-lucide="user" class="w-4 h-4"></i>
+                </div>
+                <input 
+                  type="text" 
+                  id="userName" 
+                  name="userName" 
+                  required
+                  placeholder="예: 김민준"
+                  class="w-full pl-11 pr-4 py-3.5 bg-black/50 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-lime focus:ring-1 focus:ring-brand-lime transition-all"
+                />
+              </div>
+            </div>
+
+            <!-- 연락처 입력란 -->
+            <div>
+              <label for="userPhone" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                전화번호 <span class="text-brand-lime">*</span>
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                  <i data-lucide="phone" class="w-4 h-4"></i>
+                </div>
+                <input 
+                  type="tel" 
+                  id="userPhone" 
+                  name="userPhone" 
+                  required
+                  placeholder="010-1234-5678"
+                  class="w-full pl-11 pr-4 py-3.5 bg-black/50 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-lime focus:ring-1 focus:ring-brand-lime transition-all"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 희망 방문시간 입력란 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="visitDate" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                희망 방문일 <span class="text-brand-lime">*</span>
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                  <i data-lucide="calendar" class="w-4 h-4"></i>
+                </div>
+                <input 
+                  type="date" 
+                  id="visitDate" 
+                  name="visitDate" 
+                  required
+                  class="w-full pl-11 pr-4 py-3.5 bg-black/50 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-brand-lime focus:ring-1 focus:ring-brand-lime transition-all [color-scheme:dark]"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label for="visitTime" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                희망 방문 시간대 <span class="text-brand-lime">*</span>
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                  <i data-lucide="clock" class="w-4 h-4"></i>
+                </div>
+                <select 
+                  id="visitTime" 
+                  name="visitTime" 
+                  required
+                  class="w-full pl-11 pr-4 py-3.5 bg-black/50 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-brand-lime focus:ring-1 focus:ring-brand-lime transition-all appearance-none cursor-pointer"
+                >
+                  <option value="" disabled selected class="bg-slate-900 text-slate-400">가장 편안한 시간대를 선택해주세요</option>
+                  <option value="오전 (07:00 ~ 11:00)" class="bg-slate-900 text-white">오전 얼리버드 타임 (07:00 ~ 11:00)</option>
+                  <option value="낮 (11:00 ~ 14:00)" class="bg-slate-900 text-white">낮 런치 힐링 타임 (11:00 ~ 14:00)</option>
+                  <option value="오후 (14:00 ~ 18:00)" class="bg-slate-900 text-white">오후 프라임 타임 (14:00 ~ 18:00)</option>
+                  <option value="저녁 (18:00 ~ 23:00)" class="bg-slate-900 text-white">퇴근 후 나이트 타임 (18:00 ~ 23:00)</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+                  <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 주요 관심 목적 (체크박스/태그) -->
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+              가장 이루고 싶은 목표 (중복 선택 가능)
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <label class="cursor-pointer border border-white/10 rounded-xl p-3 flex items-center gap-2 hover:border-brand-lime/50 transition-colors bg-black/30">
+                <input type="checkbox" name="interest" value="30일 옷핏 변화/체지방 감량" checked class="accent-brand-lime w-4 h-4 rounded">
+                <span class="text-xs text-slate-200">30일 옷핏 & 감량</span>
+              </label>
+              <label class="cursor-pointer border border-white/10 rounded-xl p-3 flex items-center gap-2 hover:border-brand-lime/50 transition-colors bg-black/30">
+                <input type="checkbox" name="interest" value="거북목/체형교정 & 재활" class="accent-brand-lime w-4 h-4 rounded">
+                <span class="text-xs text-slate-200">거북목 & 체형교정</span>
+              </label>
+              <label class="cursor-pointer border border-white/10 rounded-xl p-3 flex items-center gap-2 hover:border-brand-lime/50 transition-colors bg-black/30">
+                <input type="checkbox" name="interest" value="근력향상/벌크업" class="accent-brand-lime w-4 h-4 rounded">
+                <span class="text-xs text-slate-200">근력 향상 & 벌크업</span>
+              </label>
+              <label class="cursor-pointer border border-white/10 rounded-xl p-3 flex items-center gap-2 hover:border-brand-lime/50 transition-colors bg-black/30">
+                <input type="checkbox" name="interest" value="1:1 VIP 밀착 PT" class="accent-brand-lime w-4 h-4 rounded">
+                <span class="text-xs text-slate-200">1:1 VIP 집중 PT</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 개인정보 수집 동의 -->
+          <div class="flex items-start gap-2 pt-2">
+            <input type="checkbox" id="privacyAgree" required checked class="mt-1 accent-brand-lime w-4 h-4 rounded">
+            <label for="privacyAgree" class="text-xs text-slate-400 cursor-pointer">
+              [필수] 상담 예약 및 5만 원 상당 3D 분석 리포트 발송을 위한 개인정보 수집에 동의합니다.
+            </label>
+          </div>
+
+          <!-- 제출 버튼: 강력한 CTA 문구 적용 -->
+          <button 
+            type="submit" 
+            class="w-full py-4 md:py-5 rounded-2xl font-black text-base md:text-lg bg-brand-lime hover:bg-brand-limeGlow text-black shadow-glow-lime transition-all duration-300 flex items-center justify-center gap-2 hover:-translate-y-1 active:translate-y-0"
+          >
+            <span>지금 1회 무료 체험 신청하기 (선착순 10명)</span>
+            <i data-lucide="arrow-right" class="w-5 h-5 stroke-[3]"></i>
+          </button>
+          
+          <div class="text-center text-[11px] text-slate-500">
+            🔒 고객님의 소중한 개인정보는 철저히 암호화되며, 상담 및 혜택 제공 후 즉시 안전하게 파기됩니다.
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 안내 모달 팝업 ==================== -->
+  <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="glass-panel border-brand-lime/40 max-w-md w-full rounded-3xl p-8 text-center shadow-glow-lime transform scale-95 transition-transform duration-300">
+      <div class="w-16 h-16 rounded-2xl bg-brand-lime/20 border border-brand-lime/40 text-brand-lime flex items-center justify-center mx-auto mb-5 shadow-glow-lime-sm">
+        <i data-lucide="check-circle" class="w-8 h-8 stroke-[2.5]"></i>
+      </div>
+      <h3 class="text-2xl font-black text-white mb-2">상담 예약이 접수되었습니다!</h3>
+      <p class="text-brand-lime font-bold text-sm mb-3">담당 매니저가 곧 연락드립니다.</p>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-3.5 mb-5 text-left text-xs text-slate-300 space-y-1">
+        <p class="font-bold text-brand-lime flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          <span>5만 원 상당 3D 체형분석 리포트 혜택 확정</span>
+        </p>
+        <p class="text-slate-400">지정하신 희망 일시에 맞춰 1회 무료 체험 및 프라이빗 룸이 준비됩니다.</p>
+      </div>
+      <button 
+        id="modalCloseBtn" 
+        type="button" 
+        class="w-full py-3.5 rounded-xl font-black text-sm bg-brand-lime hover:bg-brand-limeGlow text-black transition-colors"
+      >
+        확인
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ==================== 푸터 ==================== -->
+  <footer class="border-t border-white/10 bg-[#05070d] py-12 px-6 md:px-12 text-slate-400 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-7 h-7 rounded-lg bg-brand-lime flex items-center justify-center font-black text-black text-sm">A</div>
+          <span class="text-base font-extrabold text-white">AURA FITNESS CLUB</span>
+        </div>
+        <p class="leading-relaxed text-slate-400">
+          서울특별시 강남구 테헤란로 123 아우라 타워 B1-2F (주차 무료 3시간 지원)<br />
+          운영시간: 평일 06:00 ~ 24:00 | 주말 및 공휴일 09:00 ~ 21:00 (연중무휴)<br />
+          직통 상담 센터: 02-555-0199 | 이메일: vip@aurafitness.kr
+        </p>
+      </div>
+
+      <div class="flex flex-col md:items-end gap-3 text-slate-400">
+        <div class="flex gap-4">
+          <a href="#" class="hover:text-brand-lime transition-colors">이용약관</a>
+          <span>&bull;</span>
+          <a href="#" class="hover:text-brand-lime transition-colors">개인정보처리방침</a>
+          <span>&bull;</span>
+          <a href="#" class="hover:text-brand-lime transition-colors">오시는 길</a>
+        </div>
+        <p class="text-slate-400">&copy; 2026 AURA FITNESS CLUB. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== 인터랙션 스크립트 ==================== -->
+  <script>
+    // 아이콘 초기화
+    lucide.createIcons();
+
+    // 희망 방문일 최소 날짜를 오늘로 기본 세팅
+    const visitDateInput = document.getElementById('visitDate');
+    if (visitDateInput) {
+      const today = new Date().toISOString().split('T')[0];
+      visitDateInput.min = today;
+      visitDateInput.value = today;
+    }
+
+    // 폼 제출 이벤트 처리
+    const form = document.getElementById('consultationForm');
+    const modal = document.getElementById('successModal');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // 모달 열기
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.querySelector('div').classList.remove('scale-95');
+      modal.querySelector('div').classList.add('scale-100');
+
+      // 브라우저 기본 알림 alert 팝업도 함께 보장 (요구사항: 알림 팝업)
+      setTimeout(() => {
+        alert("상담 예약이 접수되었습니다! 담당 매니저가 곧 연락드립니다.");
+      }, 50);
+
+      // 폼 초기화
+      form.reset();
+      if (visitDateInput) {
+        visitDateInput.value = new Date().toISOString().split('T')[0];
+      }
+    });
+
+    // 모달 닫기
+    modalCloseBtn.addEventListener('click', function() {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.querySelector('div').classList.remove('scale-100');
+      modal.querySelector('div').classList.add('scale-95');
+    });
+
+    // 모달 바깥 배경 클릭 시 닫기
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.querySelector('div').classList.remove('scale-100');
+        modal.querySelector('div').classList.add('scale-95');
+      }
+    });
+  </script>
+</body>
+</html>
