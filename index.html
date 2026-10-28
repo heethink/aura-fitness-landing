@@ -99,6 +99,10 @@
         <a href="#trainers" class="hover:text-brand-lime transition-colors">10년 경력 마스터 코치</a>
         <a href="#stats" class="hover:text-brand-lime transition-colors">실제 변화 데이터</a>
         <a href="#consultation" class="hover:text-brand-lime transition-colors">100% 무료 체험 신청</a>
+        <a href="admin.html" class="hover:text-brand-lime transition-colors flex items-center gap-1.5 text-slate-400 font-semibold px-2.5 py-1 rounded-lg border border-white/10 hover:border-brand-lime/30">
+          <i data-lucide="lock" class="w-3.5 h-3.5 text-brand-lime"></i>
+          <span>관리자</span>
+        </a>
       </nav>
 
       <!-- 상단 CTA 버튼 (행동 유도 & 선착순 한정) -->
@@ -740,17 +744,26 @@
       </div>
 
       <div class="flex flex-col md:items-end gap-3 text-slate-400">
-        <div class="flex gap-4">
+        <div class="flex gap-4 items-center">
           <a href="#" class="hover:text-brand-lime transition-colors">이용약관</a>
           <span>&bull;</span>
           <a href="#" class="hover:text-brand-lime transition-colors">개인정보처리방침</a>
           <span>&bull;</span>
-          <a href="#" class="hover:text-brand-lime transition-colors">오시는 길</a>
+          <a href="admin.html" class="hover:text-brand-lime text-slate-300 font-bold transition-colors flex items-center gap-1">
+            <i data-lucide="lock" class="w-3 h-3 text-brand-lime"></i>
+            <span>관리자 로그인</span>
+          </a>
         </div>
         <p class="text-slate-400">&copy; 2026 AURA FITNESS CLUB. All rights reserved.</p>
       </div>
     </div>
   </footer>
+
+  <!-- ==================== 플로팅 관리자 바로가기 버튼 ==================== -->
+  <a href="admin.html" class="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-3.5 py-2.5 rounded-full glass-panel border-white/20 text-xs font-bold text-slate-300 hover:text-brand-lime hover:border-brand-lime/40 shadow-2xl transition-all duration-200 group hover:scale-105">
+    <i data-lucide="lock" class="w-3.5 h-3.5 text-brand-lime group-hover:scale-110 transition-transform"></i>
+    <span>신청자 관리자 페이지</span>
+  </a>
 
   <!-- ==================== 인터랙션 스크립트 ==================== -->
   <script>
@@ -772,6 +785,36 @@
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
+
+      // 폼 입력 데이터 수집
+      const userName = document.getElementById('userName').value.trim();
+      const userPhone = document.getElementById('userPhone').value.trim();
+      const visitDate = document.getElementById('visitDate').value;
+      const visitTime = document.getElementById('visitTime').value;
+      const checkedInterests = Array.from(document.querySelectorAll('input[name="interest"]:checked')).map(cb => cb.value);
+
+      // 관리자 페이지와 연동하기 위해 localStorage에 신청자 데이터 저장
+      try {
+        const STORAGE_KEY = 'fitness_applications';
+        const existingData = localStorage.getItem(STORAGE_KEY);
+        const apps = existingData ? JSON.parse(existingData) : [];
+        
+        const newApplication = {
+          id: 'app_' + Date.now(),
+          name: userName,
+          phone: userPhone,
+          visitDate: visitDate,
+          visitTime: visitTime,
+          interests: checkedInterests,
+          status: '대기중',
+          createdAt: new Date().toLocaleString('ko-KR')
+        };
+        
+        apps.unshift(newApplication);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
+      } catch (err) {
+        console.error('신청자 데이터 저장 중 오류:', err);
+      }
 
       // 모달 열기
       modal.classList.remove('opacity-0', 'pointer-events-none');

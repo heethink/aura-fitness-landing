@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA FITNESS CLUB | VIP 상담 신청 관리자 센터</title>
+  
+  <!-- Pretendard Font CDN -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              lime: '#a3e635',
+              limeHover: '#84cc16',
+              cyan: '#06b6d4',
+              dark: '#070a13',
+              card: '#0f172a',
+            }
+          },
+          boxShadow: {
+            'glow-lime-sm': '0 0 16px -2px rgba(163, 230, 53, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="bg-[#070a13] text-slate-100 font-sans antialiased min-h-screen selection:bg-brand-lime selection:text-black">
+
+  <!-- ==================== 로그인 화면 (비밀번호: 1234) ==================== -->
+  <div id="loginSection" class="min-h-screen flex items-center justify-center p-6 relative">
+    <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] opacity-25"></div>
+    <div class="absolute w-[450px] h-[450px] bg-brand-lime/10 blur-[140px] pointer-events-none rounded-full"></div>
+
+    <div class="glass-panel w-full max-w-md p-8 rounded-3xl relative z-10 border border-white/10 shadow-2xl">
+      <div class="text-center mb-8">
+        <div class="w-14 h-14 rounded-2xl bg-brand-lime/10 border border-brand-lime/30 text-brand-lime flex items-center justify-center mx-auto mb-4 shadow-glow-lime-sm">
+          <i data-lucide="lock" class="w-7 h-7"></i>
+        </div>
+        <h1 class="text-2xl font-black text-white">관리자 로그인</h1>
+        <p class="text-slate-400 text-xs mt-1.5">AURA FITNESS 상담 신청 관리 시스템</p>
+      </div>
+
+      <form id="loginForm" class="space-y-5">
+        <div>
+          <label for="adminPassword" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+            관리자 비밀번호
+          </label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="adminPassword" 
+              required
+              placeholder="비밀번호 입력 (기본: 1234)"
+              autocomplete="current-password"
+              class="w-full px-4 py-3.5 bg-black/60 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-lime focus:ring-1 focus:ring-brand-lime transition-all"
+            />
+            <button type="button" id="togglePasswordBtn" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-white">
+              <i data-lucide="eye" id="toggleEyeIcon" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <p id="loginErrorMsg" class="text-red-400 text-xs mt-2 hidden flex items-center gap-1">
+            <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i>
+            <span>비밀번호가 일치하지 않습니다. (비밀번호: 1234)</span>
+          </p>
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-3.5 rounded-xl font-black text-sm bg-brand-lime hover:bg-brand-limeHover text-black transition-all duration-200 shadow-glow-lime-sm flex items-center justify-center gap-2"
+        >
+          <span>로그인</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 stroke-[2.5]"></i>
+        </button>
+      </form>
+
+      <div class="mt-6 pt-5 border-t border-white/10 text-center">
+        <a href="index.html" class="text-xs text-slate-400 hover:text-brand-lime flex items-center justify-center gap-1 transition-colors">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>랜딩페이지로 돌아가기</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 관리자 대시보드 화면 ==================== -->
+  <div id="adminDashboard" class="hidden min-h-screen pb-16">
+    <!-- 상단 네비게이션 -->
+    <header class="glass-panel sticky top-0 z-40 border-b border-white/10 px-6 py-4">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-brand-lime text-black flex items-center justify-center font-black text-lg">
+            A
+          </div>
+          <div>
+            <h1 class="text-base font-extrabold text-white flex items-center gap-2">
+              <span>AURA FITNESS 클럽</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-brand-lime/20 text-brand-lime border border-brand-lime/40 font-bold uppercase">Admin</span>
+            </h1>
+            <p class="text-xs text-slate-400">실시간 상담 예약자 리스트 & 현황</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            <span>랜딩페이지 보기</span>
+          </a>
+          <button id="logoutBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition-colors">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>로그아웃</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pt-8">
+      
+      <!-- 통계 카드 그리드 -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="glass-panel p-5 rounded-2xl border border-white/10">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+            <span>총 접수 건수</span>
+            <i data-lucide="users" class="w-4 h-4 text-brand-lime"></i>
+          </div>
+          <div id="statTotalCount" class="text-2xl md:text-3xl font-black text-white">0</div>
+          <p class="text-[11px] text-slate-500 mt-1">전체 누적 신청자</p>
+        </div>
+
+        <div class="glass-panel p-5 rounded-2xl border border-white/10">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+            <span>오늘 신규 접수</span>
+            <i data-lucide="sparkles" class="w-4 h-4 text-brand-cyan"></i>
+          </div>
+          <div id="statTodayCount" class="text-2xl md:text-3xl font-black text-brand-cyan">0</div>
+          <p class="text-[11px] text-slate-500 mt-1">오늘 신청한 고객</p>
+        </div>
+
+        <div class="glass-panel p-5 rounded-2xl border border-white/10">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+            <span>상담 대기중</span>
+            <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <div id="statPendingCount" class="text-2xl md:text-3xl font-black text-amber-400">0</div>
+          <p class="text-[11px] text-slate-500 mt-1">연락 대기 중인 회원</p>
+        </div>
+
+        <div class="glass-panel p-5 rounded-2xl border border-white/10">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+            <span>상담 완료</span>
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div id="statCompletedCount" class="text-2xl md:text-3xl font-black text-emerald-400">0</div>
+          <p class="text-[11px] text-slate-500 mt-1">체험 확정 및 완료</p>
+        </div>
+      </div>
+
+      <!-- 리스트 툴바: 검색, 필터, 액션 버튼 -->
+      <div class="glass-panel p-5 rounded-2xl border border-white/10 mb-6 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+        <!-- 검색 & 필터 -->
+        <div class="flex flex-col sm:flex-row gap-3 flex-1 max-w-xl">
+          <div class="relative flex-1">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="고객 이름 또는 전화번호 검색..." 
+              class="w-full pl-10 pr-4 py-2.5 bg-black/40 border border-white/10 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-lime"
+            />
+          </div>
+          <select 
+            id="statusFilter" 
+            class="px-3.5 py-2.5 bg-black/40 border border-white/10 rounded-xl text-xs sm:text-sm text-white focus:outline-none focus:border-brand-lime cursor-pointer"
+          >
+            <option value="ALL">전체 상태 보기</option>
+            <option value="대기중">대기중</option>
+            <option value="상담완료">상담완료</option>
+            <option value="취소/부재">취소/부재</option>
+          </select>
+        </div>
+
+        <!-- 엑셀 다운로드 & 샘플 데이터 생성 버튼 -->
+        <div class="flex items-center gap-2">
+          <button 
+            id="downloadCsvBtn" 
+            class="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-brand-lime/10 hover:bg-brand-lime/20 text-brand-lime border border-brand-lime/30 transition-colors"
+            title="CSV 파일로 다운로드"
+          >
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>엑셀(CSV) 저장</span>
+          </button>
+          <button 
+            id="addSampleDataBtn" 
+            class="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors"
+            title="테스트용 예시 고객 추가"
+          >
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>샘플 추가</span>
+          </button>
+          <button 
+            id="clearAllBtn" 
+            class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-semibold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-colors"
+            title="전체 데이터 비우기"
+          >
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 신청자 테이블 -->
+      <div class="glass-panel rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="border-b border-white/10 bg-white/[0.02] text-slate-400 font-bold uppercase tracking-wider text-[11px]">
+                <th class="py-3.5 px-4">신청 일시</th>
+                <th class="py-3.5 px-4">이름</th>
+                <th class="py-3.5 px-4">전화번호</th>
+                <th class="py-3.5 px-4">희망 방문일 & 시간대</th>
+                <th class="py-3.5 px-4">관심 목적</th>
+                <th class="py-3.5 px-4 text-center">상태 관리</th>
+                <th class="py-3.5 px-4 text-center">삭제</th>
+              </tr>
+            </thead>
+            <tbody id="applicationTableBody" class="divide-y divide-white/5 text-slate-300">
+              <!-- JS로 동적 렌더링 -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 데이터가 없을 때 표시될 엠프티 스테이트 -->
+        <div id="emptyState" class="hidden py-16 text-center text-slate-400">
+          <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-3 text-slate-500">
+            <i data-lucide="inbox" class="w-6 h-6"></i>
+          </div>
+          <p class="text-sm font-bold text-white mb-1">접수된 상담 신청 내역이 없습니다.</p>
+          <p class="text-xs text-slate-500">랜딩페이지에서 상담 신청을 작성하면 이곳에 실시간으로 표시됩니다.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+
+  <!-- ==================== 스크립트 로직 ==================== -->
+  <script>
+    // 상태 및 데이터 키 정의
+    const STORAGE_KEY = 'fitness_applications';
+    const AUTH_KEY = 'aura_admin_logged_in';
+    const CORRECT_PASSWORD = '1234';
+
+    // 기본 샘플 데이터 (초기 상태에서 화면을 확인할 수 있도록 제공)
+    const initialSamples = [
+      {
+        id: 'app_' + Date.now() + '_1',
+        name: '이수진',
+        phone: '010-8765-4321',
+        visitDate: new Date().toISOString().split('T')[0],
+        visitTime: '저녁 (18:00 ~ 23:00)',
+        interests: ['30일 옷핏 & 감량', '1:1 VIP 집중 PT'],
+        status: '대기중',
+        createdAt: new Date(Date.now() - 1000 * 60 * 35).toLocaleString('ko-KR')
+      },
+      {
+        id: 'app_' + Date.now() + '_2',
+        name: '박도현',
+        phone: '010-3344-5566',
+        visitDate: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+        visitTime: '오후 (14:00 ~ 18:00)',
+        interests: ['거북목 & 체형교정'],
+        status: '상담완료',
+        createdAt: new Date(Date.now() - 1000 * 60 * 180).toLocaleString('ko-KR')
+      }
+    ];
+
+    // 요소 참조
+    const loginSection = document.getElementById('loginSection');
+    const adminDashboard = document.getElementById('adminDashboard');
+    const loginForm = document.getElementById('loginForm');
+    const adminPasswordInput = document.getElementById('adminPassword');
+    const loginErrorMsg = document.getElementById('loginErrorMsg');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const tableBody = document.getElementById('applicationTableBody');
+    const emptyState = document.getElementById('emptyState');
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+    const addSampleDataBtn = document.getElementById('addSampleDataBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const toggleEyeIcon = document.getElementById('toggleEyeIcon');
+
+    // 비밀번호 보이기/숨기기 토글
+    togglePasswordBtn.addEventListener('click', () => {
+      const isPassword = adminPasswordInput.type === 'password';
+      adminPasswordInput.type = isPassword ? 'text' : 'password';
+      toggleEyeIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+      lucide.createIcons();
+    });
+
+    // 1. 데이터 로드 및 초기화
+    function getApplications() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (!data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialSamples));
+        return initialSamples;
+      }
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveApplications(apps) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
+    }
+
+    // 2. 인증 체크
+    function checkAuth() {
+      const isLoggedIn = sessionStorage.getItem(AUTH_KEY) === 'true';
+      if (isLoggedIn) {
+        loginSection.classList.add('hidden');
+        adminDashboard.classList.remove('hidden');
+        renderDashboard();
+      } else {
+        loginSection.classList.remove('hidden');
+        adminDashboard.classList.add('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    // 로그인 이벤트
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pwd = adminPasswordInput.value.trim();
+      if (pwd === CORRECT_PASSWORD) {
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        loginErrorMsg.classList.add('hidden');
+        adminPasswordInput.value = '';
+        checkAuth();
+      } else {
+        loginErrorMsg.classList.remove('hidden');
+        adminPasswordInput.focus();
+        adminPasswordInput.select();
+      }
+    });
+
+    // 로그아웃 이벤트
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem(AUTH_KEY);
+      checkAuth();
+    });
+
+    // 3. 렌더링 및 통계 계산
+    function renderDashboard() {
+      const apps = getApplications();
+      const searchTerm = searchInput.value.trim().toLowerCase();
+      const filterStatus = statusFilter.value;
+
+      // 필터링 적용
+      const filtered = apps.filter(app => {
+        const matchesSearch = (app.name && app.name.toLowerCase().includes(searchTerm)) ||
+                              (app.phone && app.phone.includes(searchTerm));
+        const matchesStatus = filterStatus === 'ALL' || app.status === filterStatus;
+        return matchesSearch && matchesStatus;
+      });
+
+      // 통계 계산
+      const todayStr = new Date().toISOString().split('T')[0];
+      const todayCount = apps.filter(a => a.visitDate === todayStr || (a.createdAt && a.createdAt.includes(new Date().toLocaleDateString('ko-KR')))).length;
+      const pendingCount = apps.filter(a => a.status === '대기중').length;
+      const completedCount = apps.filter(a => a.status === '상담완료').length;
+
+      document.getElementById('statTotalCount').textContent = apps.length;
+      document.getElementById('statTodayCount').textContent = todayCount;
+      document.getElementById('statPendingCount').textContent = pendingCount;
+      document.getElementById('statCompletedCount').textContent = completedCount;
+
+      // 테이블 렌더링
+      tableBody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+        filtered.forEach(app => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-white/[0.02] transition-colors border-b border-white/5';
+
+          // 상태 뱃지 스타일
+          let statusBadgeClass = 'bg-amber-400/10 text-amber-300 border-amber-400/30';
+          if (app.status === '상담완료') {
+            statusBadgeClass = 'bg-emerald-400/10 text-emerald-300 border-emerald-400/30';
+          } else if (app.status === '취소/부재') {
+            statusBadgeClass = 'bg-red-400/10 text-red-300 border-red-400/30';
+          }
+
+          // 관심 목적 태그
+          const interestTags = (app.interests && app.interests.length > 0)
+            ? app.interests.map(i => `<span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-brand-lime/10 text-brand-lime border border-brand-lime/20 mr-1 mb-1">${i}</span>`).join('')
+            : '<span class="text-slate-500 text-xs">-</span>';
+
+          tr.innerHTML = `
+            <td class="py-4 px-4 text-slate-400 text-xs whitespace-nowrap">
+              ${app.createdAt || '-'}
+            </td>
+            <td class="py-4 px-4 font-bold text-white whitespace-nowrap">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-xs font-bold text-brand-lime">
+                  ${app.name ? app.name.slice(0, 1) : '회'}
+                </div>
+                <span>${app.name || '미입력'}</span>
+              </div>
+            </td>
+            <td class="py-4 px-4 font-mono text-slate-300 whitespace-nowrap">
+              <a href="tel:${app.phone}" class="hover:text-brand-lime hover:underline flex items-center gap-1">
+                <i data-lucide="phone-call" class="w-3.5 h-3.5 text-slate-400"></i>
+                <span>${app.phone || '-'}</span>
+              </a>
+            </td>
+            <td class="py-4 px-4 whitespace-nowrap text-xs">
+              <div class="font-bold text-slate-200">${app.visitDate || '-'}</div>
+              <div class="text-slate-400 text-[11px]">${app.visitTime || '-'}</div>
+            </td>
+            <td class="py-4 px-4">
+              <div class="max-w-[220px] flex flex-wrap">
+                ${interestTags}
+              </div>
+            </td>
+            <td class="py-4 px-4 text-center whitespace-nowrap">
+              <select 
+                onchange="updateStatus('${app.id}', this.value)"
+                class="px-2.5 py-1 rounded-lg text-xs font-bold border ${statusBadgeClass} bg-black/60 focus:outline-none cursor-pointer"
+              >
+                <option value="대기중" ${app.status === '대기중' ? 'selected' : ''}>대기중</option>
+                <option value="상담완료" ${app.status === '상담완료' ? 'selected' : ''}>상담완료</option>
+                <option value="취소/부재" ${app.status === '취소/부재' ? 'selected' : ''}>취소/부재</option>
+              </select>
+            </td>
+            <td class="py-4 px-4 text-center whitespace-nowrap">
+              <button 
+                onclick="deleteApplication('${app.id}')" 
+                class="p-1.5 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+                title="삭제"
+              >
+                <i data-lucide="trash" class="w-4 h-4"></i>
+              </button>
+            </td>
+          `;
+
+          tableBody.appendChild(tr);
+        });
+      }
+
+      lucide.createIcons();
+    }
+
+    // 4. 상태 변경
+    window.updateStatus = function(id, newStatus) {
+      const apps = getApplications();
+      const target = apps.find(a => a.id === id);
+      if (target) {
+        target.status = newStatus;
+        saveApplications(apps);
+        renderDashboard();
+      }
+    };
+
+    // 5. 항목 개별 삭제
+    window.deleteApplication = function(id) {
+      if (!confirm('해당 상담 신청 내역을 삭제하시겠습니까?')) return;
+      let apps = getApplications();
+      apps = apps.filter(a => a.id !== id);
+      saveApplications(apps);
+      renderDashboard();
+    };
+
+    // 6. 검색 및 필터 이벤트
+    searchInput.addEventListener('input', renderDashboard);
+    statusFilter.addEventListener('change', renderDashboard);
+
+    // 7. 샘플 데이터 추가
+    addSampleDataBtn.addEventListener('click', () => {
+      const names = ['최영호', '정하은', '강민재', '윤서아', '임태준'];
+      const randomName = names[Math.floor(Math.random() * names.length)];
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const apps = getApplications();
+
+      const newSample = {
+        id: 'app_' + Date.now(),
+        name: randomName,
+        phone: `010-${randomNum}-${Math.floor(1000 + Math.random() * 9000)}`,
+        visitDate: new Date().toISOString().split('T')[0],
+        visitTime: '저녁 (18:00 ~ 23:00)',
+        interests: ['30일 옷핏 & 감량', '거북목 & 체형교정'],
+        status: '대기중',
+        createdAt: new Date().toLocaleString('ko-KR')
+      };
+
+      apps.unshift(newSample);
+      saveApplications(apps);
+      renderDashboard();
+      alert(`[${randomName}] 고객 샘플 신청이 추가되었습니다!`);
+    });
+
+    // 8. 전체 초기화
+    clearAllBtn.addEventListener('click', () => {
+      if (!confirm('정말 모든 신청 내역을 비우시겠습니까? 이 작업은 되돌릴 수 없습니다.')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      renderDashboard();
+    });
+
+    // 9. CSV 파일로 추출/다운로드
+    downloadCsvBtn.addEventListener('click', () => {
+      const apps = getApplications();
+      if (apps.length === 0) {
+        alert('저장할 상담 신청 데이터가 없습니다.');
+        return;
+      }
+
+      // BOM 추가하여 엑셀에서 한글 깨짐 방지
+      let csvContent = '\uFEFF';
+      csvContent += '신청일시,이름,전화번호,희망방문일,희망방문시간대,관심목적,상태\n';
+
+      apps.forEach(app => {
+        const row = [
+          `"${app.createdAt || ''}"`,
+          `"${app.name || ''}"`,
+          `"${app.phone || ''}"`,
+          `"${app.visitDate || ''}"`,
+          `"${app.visitTime || ''}"`,
+          `"${(app.interests || []).join(' / ')}"`,
+          `"${app.status || ''}"`
+        ];
+        csvContent += row.join(',') + '\n';
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `AURA_피트니스_상담신청자명단_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // 최초 실행 시 인증 확인
+    checkAuth();
+  </script>
+</body>
+</html>
