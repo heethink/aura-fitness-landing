@@ -29,6 +29,7 @@
           },
           boxShadow: {
             'glow-lime-sm': '0 0 16px -2px rgba(163, 230, 53, 0.35)',
+            'glow-emerald-sm': '0 0 16px -2px rgba(52, 211, 153, 0.35)',
           }
         }
       }
@@ -37,6 +38,10 @@
 
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Supabase JS SDK CDN & Config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
 
   <style>
     .glass-panel {
@@ -109,24 +114,34 @@
   <div id="adminDashboard" class="hidden min-h-screen pb-16">
     <!-- 상단 네비게이션 -->
     <header class="glass-panel sticky top-0 z-40 border-b border-white/10 px-6 py-4">
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-xl bg-brand-lime text-black flex items-center justify-center font-black text-lg">
             A
           </div>
           <div>
-            <h1 class="text-base font-extrabold text-white flex items-center gap-2">
-              <span>AURA FITNESS 클럽</span>
+            <div class="flex items-center gap-2.5">
+              <h1 class="text-base font-extrabold text-white">AURA FITNESS 관리자</h1>
               <span class="text-[10px] px-2 py-0.5 rounded bg-brand-lime/20 text-brand-lime border border-brand-lime/40 font-bold uppercase">Admin</span>
-            </h1>
-            <p class="text-xs text-slate-400">실시간 상담 예약자 리스트 & 현황</p>
+              <!-- Supabase 연결 상태 뱃지 -->
+              <span id="supabaseStatusBadge" class="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-full font-semibold">
+                <!-- JS 동적 설정 -->
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">실시간 상담 예약자 리스트 & 현황</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-3">
-          <a href="index.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors">
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <!-- Supabase DB 연동 설정 버튼 -->
+          <button id="openSupabaseModalBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-colors shadow-glow-emerald-sm">
+            <i data-lucide="database" class="w-3.5 h-3.5"></i>
+            <span>Supabase DB 설정</span>
+          </button>
+          
+          <a href="index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors">
             <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-            <span>랜딩페이지 보기</span>
+            <span>랜딩페이지</span>
           </a>
           <button id="logoutBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition-colors">
             <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
@@ -201,8 +216,16 @@
           </select>
         </div>
 
-        <!-- 엑셀 다운로드 & 샘플 데이터 생성 버튼 -->
+        <!-- 엑셀 다운로드 & 새로고침 & 관리 버튼 -->
         <div class="flex items-center gap-2">
+          <button 
+            id="refreshBtn" 
+            class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors"
+            title="새로고침"
+          >
+            <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+            <span>새로고침</span>
+          </button>
           <button 
             id="downloadCsvBtn" 
             class="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-brand-lime/10 hover:bg-brand-lime/20 text-brand-lime border border-brand-lime/30 transition-colors"
@@ -218,13 +241,6 @@
           >
             <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
             <span>샘플 추가</span>
-          </button>
-          <button 
-            id="clearAllBtn" 
-            class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-semibold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-colors"
-            title="전체 데이터 비우기"
-          >
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
@@ -263,37 +279,88 @@
     </main>
   </div>
 
+  <!-- ==================== Supabase 연동 설정 모달 ==================== -->
+  <div id="supabaseModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="glass-panel border-emerald-500/40 max-w-lg w-full rounded-3xl p-8 shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold">
+            <i data-lucide="database" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white">Supabase 클라우드 DB 연동</h3>
+            <p class="text-xs text-slate-400">모든 기기에서 실시간으로 신청 데이터를 공유합니다</p>
+          </div>
+        </div>
+        <button id="closeSupabaseModalBtn" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label for="sbUrlInput" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+            Project URL <span class="text-emerald-400">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="sbUrlInput" 
+            placeholder="https://xyzcompany.supabase.co" 
+            class="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white text-xs placeholder-slate-500 focus:outline-none focus:border-emerald-400 font-mono"
+          />
+          <p class="text-[11px] text-slate-500 mt-1">Supabase 대시보드 > Project Settings > API > Project URL</p>
+        </div>
+
+        <div>
+          <label for="sbKeyInput" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+            Anon Public API Key <span class="text-emerald-400">*</span>
+          </label>
+          <textarea 
+            id="sbKeyInput" 
+            rows="3"
+            placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." 
+            class="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white text-xs placeholder-slate-500 focus:outline-none focus:border-emerald-400 font-mono resize-none"
+          ></textarea>
+          <p class="text-[11px] text-slate-500 mt-1">Supabase 대시보드 > Project Settings > API > anon public key</p>
+        </div>
+
+        <!-- 안내 상자 -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-xs text-slate-300 space-y-2">
+          <p class="font-bold text-emerald-400 flex items-center gap-1.5">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span>1분 테이블 생성 안내</span>
+          </p>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Supabase의 <strong>SQL Editor</strong>에서 프로젝트 폴더 안의 <code class="text-brand-lime">supabase-schema.sql</code> 파일 내용을 복사 후 실행(Run)해 주시면 테이블과 보안 정책이 자동 완성됩니다.
+          </p>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button 
+            id="saveSupabaseBtn" 
+            type="button" 
+            class="flex-1 py-3 rounded-xl font-bold text-xs bg-emerald-400 hover:bg-emerald-300 text-black transition-colors flex items-center justify-center gap-1.5"
+          >
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>저장하고 즉시 연결</span>
+          </button>
+          <button 
+            id="resetSupabaseBtn" 
+            type="button" 
+            class="px-4 py-3 rounded-xl font-semibold text-xs bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors"
+          >
+            연결 해제 (로컬 모드)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ==================== 스크립트 로직 ==================== -->
   <script>
-    // 상태 및 데이터 키 정의
     const STORAGE_KEY = 'fitness_applications';
     const AUTH_KEY = 'aura_admin_logged_in';
     const CORRECT_PASSWORD = '1234';
-
-    // 기본 샘플 데이터 (초기 상태에서 화면을 확인할 수 있도록 제공)
-    const initialSamples = [
-      {
-        id: 'app_' + Date.now() + '_1',
-        name: '이수진',
-        phone: '010-8765-4321',
-        visitDate: new Date().toISOString().split('T')[0],
-        visitTime: '저녁 (18:00 ~ 23:00)',
-        interests: ['30일 옷핏 & 감량', '1:1 VIP 집중 PT'],
-        status: '대기중',
-        createdAt: new Date(Date.now() - 1000 * 60 * 35).toLocaleString('ko-KR')
-      },
-      {
-        id: 'app_' + Date.now() + '_2',
-        name: '박도현',
-        phone: '010-3344-5566',
-        visitDate: new Date(Date.now() + 86400000).toISOString().split('T')[0],
-        visitTime: '오후 (14:00 ~ 18:00)',
-        interests: ['거북목 & 체형교정'],
-        status: '상담완료',
-        createdAt: new Date(Date.now() - 1000 * 60 * 180).toLocaleString('ko-KR')
-      }
-    ];
 
     // 요소 참조
     const loginSection = document.getElementById('loginSection');
@@ -308,11 +375,24 @@
     const statusFilter = document.getElementById('statusFilter');
     const downloadCsvBtn = document.getElementById('downloadCsvBtn');
     const addSampleDataBtn = document.getElementById('addSampleDataBtn');
-    const clearAllBtn = document.getElementById('clearAllBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
     const togglePasswordBtn = document.getElementById('togglePasswordBtn');
     const toggleEyeIcon = document.getElementById('toggleEyeIcon');
+    const supabaseStatusBadge = document.getElementById('supabaseStatusBadge');
+    
+    // Supabase 모달 요소
+    const supabaseModal = document.getElementById('supabaseModal');
+    const openSupabaseModalBtn = document.getElementById('openSupabaseModalBtn');
+    const closeSupabaseModalBtn = document.getElementById('closeSupabaseModalBtn');
+    const sbUrlInput = document.getElementById('sbUrlInput');
+    const sbKeyInput = document.getElementById('sbKeyInput');
+    const saveSupabaseBtn = document.getElementById('saveSupabaseBtn');
+    const resetSupabaseBtn = document.getElementById('resetSupabaseBtn');
 
-    // 비밀번호 보이기/숨기기 토글
+    let currentApplications = [];
+    let realtimeSubscription = null;
+
+    // 비밀번호 토글
     togglePasswordBtn.addEventListener('click', () => {
       const isPassword = adminPasswordInput.type === 'password';
       adminPasswordInput.type = isPassword ? 'text' : 'password';
@@ -320,68 +400,149 @@
       lucide.createIcons();
     });
 
-    // 1. 데이터 로드 및 초기화
-    function getApplications() {
-      const data = localStorage.getItem(STORAGE_KEY);
-      if (!data) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialSamples));
-        return initialSamples;
-      }
-      try {
-        return JSON.parse(data);
-      } catch (e) {
-        return [];
-      }
-    }
-
-    function saveApplications(apps) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
-    }
-
-    // 2. 인증 체크
-    function checkAuth() {
-      const isLoggedIn = sessionStorage.getItem(AUTH_KEY) === 'true';
-      if (isLoggedIn) {
-        loginSection.classList.add('hidden');
-        adminDashboard.classList.remove('hidden');
-        renderDashboard();
+    // Supabase 뱃지 업데이트
+    function updateBadge() {
+      const client = getSupabaseClient();
+      if (client) {
+        supabaseStatusBadge.className = 'inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/40 shadow-glow-emerald-sm cursor-pointer';
+        supabaseStatusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Supabase 클라우드 DB 연결됨</span>';
       } else {
-        loginSection.classList.remove('hidden');
-        adminDashboard.classList.add('hidden');
+        supabaseStatusBadge.className = 'inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-amber-500/15 text-amber-300 border border-amber-500/40 cursor-pointer';
+        supabaseStatusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400"></span><span>로컬 스토리지 모드 (DB 미연결)</span>';
       }
-      lucide.createIcons();
+      supabaseStatusBadge.onclick = openModal;
     }
 
-    // 로그인 이벤트
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const pwd = adminPasswordInput.value.trim();
-      if (pwd === CORRECT_PASSWORD) {
-        sessionStorage.setItem(AUTH_KEY, 'true');
-        loginErrorMsg.classList.add('hidden');
-        adminPasswordInput.value = '';
-        checkAuth();
-      } else {
-        loginErrorMsg.classList.remove('hidden');
-        adminPasswordInput.focus();
-        adminPasswordInput.select();
-      }
+    // 모달 제어
+    function openModal() {
+      const config = getSupabaseConfig();
+      sbUrlInput.value = config.url || '';
+      sbKeyInput.value = config.anonKey || '';
+      supabaseModal.classList.remove('opacity-0', 'pointer-events-none');
+      supabaseModal.querySelector('div').classList.remove('scale-95');
+      supabaseModal.querySelector('div').classList.add('scale-100');
+    }
+
+    function closeModal() {
+      supabaseModal.classList.add('opacity-0', 'pointer-events-none');
+      supabaseModal.querySelector('div').classList.remove('scale-100');
+      supabaseModal.querySelector('div').classList.add('scale-95');
+    }
+
+    openSupabaseModalBtn.addEventListener('click', openModal);
+    closeSupabaseModalBtn.addEventListener('click', closeModal);
+    supabaseModal.addEventListener('click', (e) => {
+      if (e.target === supabaseModal) closeModal();
     });
 
-    // 로그아웃 이벤트
-    logoutBtn.addEventListener('click', () => {
-      sessionStorage.removeItem(AUTH_KEY);
-      checkAuth();
+    // Supabase 키 저장
+    saveSupabaseBtn.addEventListener('click', async () => {
+      const url = sbUrlInput.value.trim();
+      const key = sbKeyInput.value.trim();
+
+      if (!url || !key) {
+        alert('Supabase Project URL과 Anon API Key를 모두 입력해주세요.');
+        return;
+      }
+
+      localStorage.setItem('aura_supabase_url', url);
+      localStorage.setItem('aura_supabase_key', key);
+
+      updateBadge();
+      closeModal();
+      alert('Supabase 설정이 저장되었습니다. 데이터를 새로 불러옵니다.');
+      await loadApplications();
+      setupRealtime();
     });
 
-    // 3. 렌더링 및 통계 계산
-    function renderDashboard() {
-      const apps = getApplications();
+    // Supabase 설정 초기화 (로컬 모드 복귀)
+    resetSupabaseBtn.addEventListener('click', async () => {
+      if (!confirm('Supabase 연동을 해제하고 브라우저 로컬 저장소 모드로 전환하시겠습니까?')) return;
+      localStorage.removeItem('aura_supabase_url');
+      localStorage.removeItem('aura_supabase_key');
+      if (realtimeSubscription) {
+        const client = getSupabaseClient();
+        if (client) client.removeChannel(realtimeSubscription);
+      }
+      updateBadge();
+      closeModal();
+      await loadApplications();
+    });
+
+    // 데이터 로드 (Supabase 우선, 실패 시 localStorage)
+    async function loadApplications() {
+      const client = getSupabaseClient();
+
+      if (client) {
+        try {
+          const { data, error } = await client
+            .from('consultations')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          if (error) {
+            console.error('Supabase 데이터 로드 실패:', error);
+            fallbackToLocalStorage();
+          } else {
+            currentApplications = (data || []).map(row => ({
+              id: row.id,
+              name: row.name,
+              phone: row.phone,
+              visitDate: row.visit_date,
+              visitTime: row.visit_time,
+              interests: row.interests || [],
+              status: row.status || '대기중',
+              createdAt: new Date(row.created_at).toLocaleString('ko-KR')
+            }));
+            renderTable();
+          }
+        } catch (e) {
+          console.error('Supabase 예외 발생:', e);
+          fallbackToLocalStorage();
+        }
+      } else {
+        fallbackToLocalStorage();
+      }
+    }
+
+    function fallbackToLocalStorage() {
+      const localData = localStorage.getItem(STORAGE_KEY);
+      if (localData) {
+        try {
+          currentApplications = JSON.parse(localData);
+        } catch {
+          currentApplications = [];
+        }
+      } else {
+        currentApplications = [];
+      }
+      renderTable();
+    }
+
+    // Supabase Realtime 실시간 구독
+    function setupRealtime() {
+      const client = getSupabaseClient();
+      if (!client) return;
+
+      if (realtimeSubscription) {
+        client.removeChannel(realtimeSubscription);
+      }
+
+      realtimeSubscription = client
+        .channel('public:consultations')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'consultations' }, payload => {
+          console.log('실시간 데이터 변경 감지:', payload);
+          loadApplications();
+        })
+        .subscribe();
+    }
+
+    // 테이블 렌더링
+    function renderTable() {
       const searchTerm = searchInput.value.trim().toLowerCase();
       const filterStatus = statusFilter.value;
 
-      // 필터링 적용
-      const filtered = apps.filter(app => {
+      const filtered = currentApplications.filter(app => {
         const matchesSearch = (app.name && app.name.toLowerCase().includes(searchTerm)) ||
                               (app.phone && app.phone.includes(searchTerm));
         const matchesStatus = filterStatus === 'ALL' || app.status === filterStatus;
@@ -390,16 +551,15 @@
 
       // 통계 계산
       const todayStr = new Date().toISOString().split('T')[0];
-      const todayCount = apps.filter(a => a.visitDate === todayStr || (a.createdAt && a.createdAt.includes(new Date().toLocaleDateString('ko-KR')))).length;
-      const pendingCount = apps.filter(a => a.status === '대기중').length;
-      const completedCount = apps.filter(a => a.status === '상담완료').length;
+      const todayCount = currentApplications.filter(a => a.visitDate === todayStr || (a.createdAt && a.createdAt.includes(new Date().toLocaleDateString('ko-KR')))).length;
+      const pendingCount = currentApplications.filter(a => a.status === '대기중').length;
+      const completedCount = currentApplications.filter(a => a.status === '상담완료').length;
 
-      document.getElementById('statTotalCount').textContent = apps.length;
+      document.getElementById('statTotalCount').textContent = currentApplications.length;
       document.getElementById('statTodayCount').textContent = todayCount;
       document.getElementById('statPendingCount').textContent = pendingCount;
       document.getElementById('statCompletedCount').textContent = completedCount;
 
-      // 테이블 렌더링
       tableBody.innerHTML = '';
 
       if (filtered.length === 0) {
@@ -410,7 +570,6 @@
           const tr = document.createElement('tr');
           tr.className = 'hover:bg-white/[0.02] transition-colors border-b border-white/5';
 
-          // 상태 뱃지 스타일
           let statusBadgeClass = 'bg-amber-400/10 text-amber-300 border-amber-400/30';
           if (app.status === '상담완료') {
             statusBadgeClass = 'bg-emerald-400/10 text-emerald-300 border-emerald-400/30';
@@ -418,7 +577,6 @@
             statusBadgeClass = 'bg-red-400/10 text-red-300 border-red-400/30';
           }
 
-          // 관심 목적 태그
           const interestTags = (app.interests && app.interests.length > 0)
             ? app.interests.map(i => `<span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-brand-lime/10 text-brand-lime border border-brand-lime/20 mr-1 mb-1">${i}</span>`).join('')
             : '<span class="text-slate-500 text-xs">-</span>';
@@ -478,74 +636,101 @@
       lucide.createIcons();
     }
 
-    // 4. 상태 변경
-    window.updateStatus = function(id, newStatus) {
-      const apps = getApplications();
-      const target = apps.find(a => a.id === id);
-      if (target) {
-        target.status = newStatus;
-        saveApplications(apps);
-        renderDashboard();
+    // 상태 변경 함수
+    window.updateStatus = async function(id, newStatus) {
+      const client = getSupabaseClient();
+      if (client) {
+        const { error } = await client
+          .from('consultations')
+          .update({ status: newStatus })
+          .eq('id', id);
+        if (error) {
+          alert('Supabase 업데이트 중 오류: ' + error.message);
+          return;
+        }
+      } else {
+        const target = currentApplications.find(a => String(a.id) === String(id));
+        if (target) {
+          target.status = newStatus;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(currentApplications));
+        }
       }
+      loadApplications();
     };
 
-    // 5. 항목 개별 삭제
-    window.deleteApplication = function(id) {
+    // 삭제 함수
+    window.deleteApplication = async function(id) {
       if (!confirm('해당 상담 신청 내역을 삭제하시겠습니까?')) return;
-      let apps = getApplications();
-      apps = apps.filter(a => a.id !== id);
-      saveApplications(apps);
-      renderDashboard();
+      const client = getSupabaseClient();
+      if (client) {
+        const { error } = await client
+          .from('consultations')
+          .delete()
+          .eq('id', id);
+        if (error) {
+          alert('Supabase 삭제 중 오류: ' + error.message);
+          return;
+        }
+      } else {
+        currentApplications = currentApplications.filter(a => String(a.id) !== String(id));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentApplications));
+      }
+      loadApplications();
     };
 
-    // 6. 검색 및 필터 이벤트
-    searchInput.addEventListener('input', renderDashboard);
-    statusFilter.addEventListener('change', renderDashboard);
+    // 검색 & 필터
+    searchInput.addEventListener('input', renderTable);
+    statusFilter.addEventListener('change', renderTable);
+    refreshBtn.addEventListener('click', loadApplications);
 
-    // 7. 샘플 데이터 추가
-    addSampleDataBtn.addEventListener('click', () => {
+    // 샘플 추가
+    addSampleDataBtn.addEventListener('click', async () => {
       const names = ['최영호', '정하은', '강민재', '윤서아', '임태준'];
       const randomName = names[Math.floor(Math.random() * names.length)];
       const randomNum = Math.floor(1000 + Math.random() * 9000);
-      const apps = getApplications();
+      const todayStr = new Date().toISOString().split('T')[0];
 
-      const newSample = {
-        id: 'app_' + Date.now(),
-        name: randomName,
-        phone: `010-${randomNum}-${Math.floor(1000 + Math.random() * 9000)}`,
-        visitDate: new Date().toISOString().split('T')[0],
-        visitTime: '저녁 (18:00 ~ 23:00)',
-        interests: ['30일 옷핏 & 감량', '거북목 & 체형교정'],
-        status: '대기중',
-        createdAt: new Date().toLocaleString('ko-KR')
-      };
-
-      apps.unshift(newSample);
-      saveApplications(apps);
-      renderDashboard();
-      alert(`[${randomName}] 고객 샘플 신청이 추가되었습니다!`);
+      const client = getSupabaseClient();
+      if (client) {
+        const { error } = await client
+          .from('consultations')
+          .insert([{
+            name: randomName,
+            phone: `010-${randomNum}-${Math.floor(1000 + Math.random() * 9000)}`,
+            visit_date: todayStr,
+            visit_time: '저녁 (18:00 ~ 23:00)',
+            interests: ['30일 옷핏 & 감량', '거북목 & 체형교정'],
+            status: '대기중'
+          }]);
+        if (error) alert('Supabase 샘플 추가 에러: ' + error.message);
+        else loadApplications();
+      } else {
+        const newSample = {
+          id: 'app_' + Date.now(),
+          name: randomName,
+          phone: `010-${randomNum}-${Math.floor(1000 + Math.random() * 9000)}`,
+          visitDate: todayStr,
+          visitTime: '저녁 (18:00 ~ 23:00)',
+          interests: ['30일 옷핏 & 감량', '거북목 & 체형교정'],
+          status: '대기중',
+          createdAt: new Date().toLocaleString('ko-KR')
+        };
+        currentApplications.unshift(newSample);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentApplications));
+        renderTable();
+      }
     });
 
-    // 8. 전체 초기화
-    clearAllBtn.addEventListener('click', () => {
-      if (!confirm('정말 모든 신청 내역을 비우시겠습니까? 이 작업은 되돌릴 수 없습니다.')) return;
-      localStorage.removeItem(STORAGE_KEY);
-      renderDashboard();
-    });
-
-    // 9. CSV 파일로 추출/다운로드
+    // CSV 다운로드
     downloadCsvBtn.addEventListener('click', () => {
-      const apps = getApplications();
-      if (apps.length === 0) {
+      if (currentApplications.length === 0) {
         alert('저장할 상담 신청 데이터가 없습니다.');
         return;
       }
-
-      // BOM 추가하여 엑셀에서 한글 깨짐 방지
       let csvContent = '\uFEFF';
       csvContent += '신청일시,이름,전화번호,희망방문일,희망방문시간대,관심목적,상태\n';
 
-      apps.forEach(app => {
+      currentApplications.forEach(app => {
         const row = [
           `"${app.createdAt || ''}"`,
           `"${app.name || ''}"`,
@@ -562,13 +747,47 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.setAttribute('href', url);
-      link.setAttribute('download', `AURA_피트니스_상담신청자명단_${new Date().toISOString().split('T')[0]}.csv`);
+      link.setAttribute('download', `AURA_피트니스_상담신청자_${new Date().toISOString().split('T')[0]}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     });
 
-    // 최초 실행 시 인증 확인
+    // 인증 확인
+    function checkAuth() {
+      const isLoggedIn = sessionStorage.getItem(AUTH_KEY) === 'true';
+      if (isLoggedIn) {
+        loginSection.classList.add('hidden');
+        adminDashboard.classList.remove('hidden');
+        updateBadge();
+        loadApplications();
+        setupRealtime();
+      } else {
+        loginSection.classList.remove('hidden');
+        adminDashboard.classList.add('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (adminPasswordInput.value.trim() === CORRECT_PASSWORD) {
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        loginErrorMsg.classList.add('hidden');
+        adminPasswordInput.value = '';
+        checkAuth();
+      } else {
+        loginErrorMsg.classList.remove('hidden');
+        adminPasswordInput.focus();
+        adminPasswordInput.select();
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem(AUTH_KEY);
+      checkAuth();
+    });
+
     checkAuth();
   </script>
 </body>

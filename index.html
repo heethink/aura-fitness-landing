@@ -44,6 +44,10 @@
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- Supabase JS SDK CDN & Config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
   <style>
     /* 커스텀 유틸리티 */
     .glass-panel {
@@ -783,7 +787,7 @@
     const modal = document.getElementById('successModal');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
       e.preventDefault();
 
       // 폼 입력 데이터 수집
@@ -793,7 +797,31 @@
       const visitTime = document.getElementById('visitTime').value;
       const checkedInterests = Array.from(document.querySelectorAll('input[name="interest"]:checked')).map(cb => cb.value);
 
-      // 관리자 페이지와 연동하기 위해 localStorage에 신청자 데이터 저장
+      // 1. Supabase 클라우드 데이터베이스에 실시간 저장 시도
+      try {
+        const client = getSupabaseClient();
+        if (client) {
+          const { error } = await client
+            .from('consultations')
+            .insert([{
+              name: userName,
+              phone: userPhone,
+              visit_date: visitDate,
+              visit_time: visitTime,
+              interests: checkedInterests,
+              status: '대기중'
+            }]);
+          if (error) {
+            console.warn('Supabase 저장 중 오류 (로컬스토리지로 백업):', error);
+          } else {
+            console.log('Supabase 클라우드 DB에 상담 신청이 성공적으로 저장되었습니다.');
+          }
+        }
+      } catch (sbErr) {
+        console.warn('Supabase 호출 실패:', sbErr);
+      }
+
+      // 2. 오프라인/로컬 백업용 localStorage에도 안전하게 저장
       try {
         const STORAGE_KEY = 'fitness_applications';
         const existingData = localStorage.getItem(STORAGE_KEY);
